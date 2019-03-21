@@ -21,7 +21,7 @@ Main menu will quickly build  the basic gui application needed for the textual a
 return: Returns a reference to the Main Panel. 
 """
 def buildMainMenu():
-
+    print("hoi")
     mainPanel = Tk()
 
     mainPanel.title("Main Menu")
