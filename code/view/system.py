@@ -11,13 +11,10 @@ from tkinter import ttk
 
 """
 buildMainMenu(): 
-
 param: None
-
 Builds the main menu needed for, the project. 
 When the system frist starts this is what is built and displayed to the user.
 Main menu will quickly build  the basic gui application needed for the textual anaylsis.
-
 return: Returns a reference to the Main Panel. 
 """
 def buildMainMenu():
@@ -45,7 +42,6 @@ def buildMainMenu():
 
 """
 Main panel,
-
 """
 
 if __name__ == '__main__':
@@ -53,6 +49,5 @@ if __name__ == '__main__':
     mainPanel = buildMainMenu()
 
     mainPanel.mainloop()
-
 
 
