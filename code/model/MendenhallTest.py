@@ -27,20 +27,27 @@ class MendenhallTest:
 
         fed_len_dis = {}
 
-        tokens = []
+
 
         for author, value in dataBase.items():
-            print(author)
+
             tokens = nltk.word_tokenize(dataBase[author])
 
             fed_By_Token[author]= ([token for token in tokens
-                                if any(c.isalpha() for c in tokens)])
+                                if any(c.isalpha() for c in token)])
 
-            token_len = [len(token) for token in dataBase[author]]
+            token_len = [len(token) for token in fed_By_Token[author]]
+
+
 
             fed_len_dis[author] = nltk.FreqDist(token_len)
             fed_len_dis[author].plot(15, title=author)
-            plt.show(fed_len_dis[author].plot(15, title=author))
+
+
+
+    # going to need to use plt to run this stuff!
+
+
 
 
 
