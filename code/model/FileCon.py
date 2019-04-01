@@ -15,6 +15,7 @@ the correct author. This will allow us to compare texts between two or more auth
 
 class FileCon:
 
+    dataBase = {}
 
     """
     init method, constructor for this class.
@@ -87,13 +88,13 @@ class FileCon:
         build a dictionary, which contains a 'data base', which contains all data that will need to be used to run
         stylometeric tests. 
     """
-    def buildData (self, dataBase, DictionaryValues, dataPath):
+    def buildData (self, DictionaryValues, dataPath):
 
         for author, values in DictionaryValues.items():
-            dataBase[author] = self.buildText(values, dataPath)
+            self.dataBase[author] = self.buildText(values, dataPath)
 
 
-        return dataBase
+
 
 if __name__ == '__main__':
 
@@ -106,16 +107,15 @@ if __name__ == '__main__':
                             78, 79, 80, 81, 82, 83, 84, 85],
                "Jay": [2 ,3 ,4 ,5], }
 
-    author_PaperContent = {}
 
     dataPath = "C:/Schoolprojects/history papers/history396project/history396GraphicalProject/Data/data"
 
-    author_PaperContent= test.buildData(author_PaperContent, testDic, dataPath)
+    test.buildData(testDic, dataPath)
 
     # test to see if we are getting correct file output.
     for author in testDic:
 
-        print(author_PaperContent[author][:200])
+        print(test.dataBase[author][:200])
 
 
 

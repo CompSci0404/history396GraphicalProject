@@ -262,7 +262,7 @@ class buildAuthor(tk.Toplevel):
             con = controller.controller()                   # tell model, we got some data.
 
 
-            con.authorBuild(dictionaryForModel)
+            con.authorBuild(dictionaryForModel, self.dataPath)
 
             self.withdraw()                                 # move to the next window page.
             newFrame = testingPage(con)
@@ -271,17 +271,22 @@ class buildAuthor(tk.Toplevel):
 
 class testingPage(tk.Toplevel):
 
-    con = None
+    con = None                  # a reference to the controller class.
 
     def __init__(self, controller):
+
         tk.Toplevel.__init__(self)
 
         self.con = controller
-        self.label = Label(self, text = "made it!")
-        self.label.pack()
+
+        print("hello? ", self.con)
 
 
+        self.label = Label(self, text = "click a button below to choose a Stylometric test to run on this data:", font=FONT)
+        self.label.grid(row = 1, column = 1)
 
+        self.MendhallTest = Button(self, text = "Conduct Mendhall test:", font = FONT, command = lambda : self.con.runMendenhall())
+        self.MendhallTest.grid(row = 2, column = 1)
 
 
 
