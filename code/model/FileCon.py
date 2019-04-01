@@ -5,13 +5,14 @@
 import os
 import re
 
-# 1 week extension. advance slide for power point transitions.
 
 """
 the point of this class, is to build all the text for each piece of writing.
 we need to find gain the correct file and add it to a list which we can store with
 the correct author. This will allow us to compare texts between two or more authors.
 """
+
+
 class FileCon:
 
 

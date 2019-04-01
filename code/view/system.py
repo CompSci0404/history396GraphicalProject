@@ -1,11 +1,15 @@
 # Matt Radke
 # mmr174
+#---[[Controller package I built, used to interact with only the data in the model. The view intakes data tells model it has data, controller deals with data and updates Model.]]---#
+from controller import controller
 
-import os
+#---[[tkinter imports:]]---#
 from tkinter import filedialog
 from tkinter import *
 import tkinter as tk
 
+#---[[String manipulation import:]]---#
+import re
 
 """
 This file runs the entire GUI system for my project. It all starts with the the start page class
@@ -27,7 +31,7 @@ class startPage(tk.Frame):
     
     this method builds the starting page that is seen when the program first starts. 
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):                                    # this allows me to have multiply arguments, interesting if I ever want to add more or expand on this project.
         tk.Frame.__init__(self, *args, **kwargs)
 
 
@@ -164,20 +168,19 @@ class buildAuthor(tk.Toplevel):
             dictionaryOfWorksLabels = {}
             dictionaryOfWorksEntrys = {}
 
+            while(counter <  numberAuthors):                                                                            # count throw how many authors we want, that is how many pieces we put into the FRAME.
 
-            while(counter <  numberAuthors):                                                                                # count throw how many authors we want, that is how many pieces we put into the FRAME.
+                                                                                                                        # Basically I created a variable called authIn0......N, then I said for this variable store in a GUI Object.
 
-                                                                                                                             # Basically I created a variable called authIn0......N, then I said for this variable store in a GUI Object.
-
-                                                                                                                            # store labels, for the authors NAME, basically this is just a instruction, so user knows what to put.
+                                                                                                                        # store labels, for the authors NAME, basically this is just a instruction, so user knows what to put.
                 dictionaryOfAuthorLabels["authIn"+str(counter)] = Label(self, text="Input Authors Name:", font= FONT)
-                dictionaryOfAuthorLabels["authIn"+str(counter)].grid(row = lastRow + 1, column = 1)                         # neat little Idea I had, just keep adding onto the row to add each label.
+                dictionaryOfAuthorLabels["authIn"+str(counter)].grid(row = lastRow + 1, column = 1)                     # neat little Idea I had, just keep adding onto the row to add each label.
 
                 # A dictionary entry, stores the entry field for the corriersponding label above
                 dictionaryOfAuthorEntrys["authIn"+str(counter)] = Entry(self)
-                dictionaryOfAuthorEntrys["authIn"+str(counter)].grid(row = lastRow + 1, column = 2)
+                dictionaryOfAuthorEntrys["authIn"+str(counter)].grid(row = lastRow + 1, column = 2)                     # the rest of these dictionaries do the same thing, they build a number of different GUI pieces and keep track of them.
 
-                dictionaryOfWorksLabels["authIn" + str(counter)] = Label(self,text="Input which word documents belong to this author",font=FONT)
+                dictionaryOfWorksLabels["authIn" + str(counter)] = Label(self,text="Input file numbers that belong to this author",font=FONT)
                 dictionaryOfWorksLabels["authIn" + str(counter)].grid(row=lastRow + 1, column=3)
 
                 dictionaryOfWorksEntrys["authIn" + str(counter)] = Entry(self)
@@ -187,15 +190,98 @@ class buildAuthor(tk.Toplevel):
                 lastRow += 1
                 counter += 1
 
-
-            self.doneButton = Button(self, text="submit data:", font=FONT, command = lambda : self.FrameDone(dictionaryOfAuthorLabels, dictionaryOfAuthorEntrys, dictionaryOfWorksEntrys, dictionaryOfWorksLabels))
+            # create a new button, this button will progress to the next page.
+            self.doneButton = Button(self, text="submit data:", font=FONT, command = lambda : self.FrameDone( dictionaryOfAuthorEntrys, dictionaryOfWorksEntrys))
             self.doneButton.grid(row=lastRow + 1, column = 5)
 
-    def FrameDone(self, dictionaryOfLabels, dictionaryOfEntrys, dicOfWorkEnt, dickOfWorkLabel):
+            # move the back button down to bottom of this GUI page.
+            self.backButton.grid_configure(row = lastRow +1 , column = 1)
+            self.submitButton.destroy() # destory the submit button because data has been recorded.
+
+    """
+    FrameDone(dict1, dict2):
+        dict1: this is all gui entries for Authors, gains information from each author.
+        dict2: all the entries for file numbers that belong to a certain author.
+        
+        builds the entry data from the GUI panel into use able data for the MODEL classes. 
+        
+    """
+
+    def FrameDone(self, dictionaryOfEntrys, dicOfWorkEnt):
+
+        dictionaryForModel = {} # the final dictionary that will be sent to the model.
+        listOfStrNum = []       # lists used to aquire all the numbers in the input entry section.
+        listOfNumbers = []
 
         # first lets do a little check!
+        counter = 0
+        dataFilled = True
 
-        print("hoi")
+
+        while(counter < len(dictionaryOfEntrys)):   # first lets do a check to see if all entries have been filled, if one of them is equal to 0 then we have nothing in this entry.
+
+            if(dictionaryOfEntrys["authIn"+ str(counter)].get() == 0 or dicOfWorkEnt["authIn" + str(counter)].get() == 0):
+
+                self.errorLabel.config(text = "please fill in all entry items in the Panel!")
+                dataFilled = False
+
+            counter += 1
+
+        if(dataFilled):                                     # if the data checks out, then we are green to proceed:
+
+            self.errorLabel.config(text = "")
+
+
+            for key, value in dictionaryOfEntrys.items():   # count through all the content
+
+                Author = str(dictionaryOfEntrys[key].get())# get the authors.
+
+                numbers = str(dicOfWorkEnt[key].get())      # get all the numbers per each entry.
+
+                listOfStrNum = re.findall('\d+', numbers)   # store them in a list.
+
+                k = 0
+
+                while(k < len(listOfStrNum)):
+
+                    listOfNumbers.append(int(listOfStrNum[k]))  # convert string numbers into Integer numbers.
+
+                    k+=1
+
+                print(listOfNumbers)
+
+                dictionaryForModel[Author] = set(listOfNumbers) # store all the data into dictionary for model.
+
+
+                listOfStrNum.clear()
+                listOfNumbers.clear()
+
+
+            print("After doing all calculations this is what we got:\n",dictionaryForModel)
+
+            con = controller.controller()                   # tell model, we got some data.
+
+
+            con.authorBuild(dictionaryForModel)
+
+            self.withdraw()                                 # move to the next window page.
+            newFrame = testingPage(con)
+
+
+
+class testingPage(tk.Toplevel):
+
+    con = None
+
+    def __init__(self, controller):
+        tk.Toplevel.__init__(self)
+
+        self.con = controller
+        self.label = Label(self, text = "made it!")
+        self.label.pack()
+
+
+
 
 
 
