@@ -3,7 +3,7 @@ from model import authorConstruction
 from model import FileCon
 from model import MendenhallTest
 from model import KilgariffTest
-
+from model import DeltaTest
 
 class controller:
 
@@ -44,7 +44,7 @@ class controller:
 
         print(answer)
 
-        
+
         return answer
 
 
@@ -63,3 +63,15 @@ class controller:
     def returnAllAuthors(self):
 
         return self.authorDataRef.returnAuthors()
+
+
+
+    def runDelta(self, num):
+
+        delt = DeltaTest.DeltaTest()
+
+        self.returnAllAuthors()
+
+        list = delt.runDeltaTest(self.fileConRef.dataBase, self.returnAllAuthors(), num)
+
+        return list

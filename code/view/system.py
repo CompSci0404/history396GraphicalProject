@@ -289,7 +289,7 @@ this class is the page that allows the user to conduct all there testing it offe
 
 1. the first test is the Mendenhall test quite simple, just press the button and it displays all the authors and number words they have written on a graph.
 2. The second test is the Kilgariff test, which can read Disputed files and calculate a CHI-square  stat to determine the likeliness of a author being the author of the Disputed test.
-3. the Third and final test is a Delta method allows to compare anonymous texts to many different authors.
+3. the Third and final test will combine all the writings and find the most common word in the entire collection.
 
 """
 
@@ -327,6 +327,7 @@ class testingPage(tk.Toplevel):
         self.kilgTest = Button(self, text = "Conduct Kilgariff test:", font = FONT, state=DISABLED, command = lambda : self.runTest(self.authorSelectedForKilg))
         self.kilgTest.grid(row=6, column = 2)
 
+        self.lastRow = 7
 
         if(self.con.kilPossible()):
             self.kilgTest.grid_configure(row = 5, column = 3)
@@ -334,8 +335,6 @@ class testingPage(tk.Toplevel):
             self.notice.config(text = "")
 
             self.EnterAuthors.config(text = "how many authors do you want to compare in a kilgariff test? Check which ones:")
-
-            self.lastRow = 7
 
                                                                                                                         # this is a little check box area, the user checks which authors they want to have tested for the disputed files.
             allCurrentAuthors = self.con.returnAllAuthors()
@@ -361,10 +360,91 @@ class testingPage(tk.Toplevel):
 
 
         self.sep2 = Label(self, text="------------------------------------------------------------------", font = FONT)
-        self.sep2.grid(self.lastRow + 1, column = 1)
+        self.sep2.grid(row = self.lastRow + 1, column = 1)
 
         self.lastRow += 1
-        
+
+        self.DeltaInst = Label(self, text = "Enter in the number of results that you would like to see for Word Frequency:", font= FONT)
+        self.DeltaInst.grid(row = self.lastRow + 1, column = 1)
+
+        self.ent = Entry(self)
+        self.ent.grid(row = self.lastRow + 1, column = 2)
+
+        self.lastRow += 1
+
+
+        self.sub = Button(self, text = "Submit number", font = FONT, command = lambda : self.gainInfo())
+        self.sub.grid(row = self.lastRow + 1, column = 1)
+        self.lastRow += 1
+
+        self.no = Label(self, text="", font=FONT)
+        self.no.grid(row=self.lastRow + 1, column=2)
+        self.lastRow += 1
+
+
+    def gainInfo(self):
+
+
+
+        if(len(self.ent.get()) == 0):
+
+            self.no.config(text="please ensure a number within the entry!")
+
+        else:
+
+            x = int(self.ent.get())
+
+            labelOfWord = {}
+
+            counter = 0
+
+            words = self.con.runDelta(x)
+
+            perviousLR = self.lastRow
+
+            while (counter < len(words)):
+
+
+
+                if(counter < 25):
+
+                    labelOfWord["word" + str(counter)] = Label(self, text = words[counter]).grid(row = self.lastRow + 1, column = 1)
+
+
+                elif( counter < 50 and counter > 25 ):
+
+                    if(counter == 26):
+                        self.lastRow = perviousLR
+
+                        labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column=2)
+                    else:
+
+                        labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column = 2)
+
+                elif(counter < 75 and counter > 50):
+
+                        if( counter == 51):
+                            self.lastRow = perviousLR
+                            labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column=3)
+                        else:
+                            labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column=3)
+
+                elif counter < 100 and counter > 75 :
+
+                    if (counter == 76):
+
+                        self.lastRow = perviousLR
+
+                        labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column=4)
+
+                    else:
+
+                        labelOfWord["word" + str(counter)] = Label(self, text=words[counter]).grid(row=self.lastRow + 1, column=4)
+
+
+
+                self.lastRow += 1
+                counter += 1
 
 
     """

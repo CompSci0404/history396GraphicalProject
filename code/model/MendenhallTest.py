@@ -27,9 +27,11 @@ class MendenhallTest:
 
         fed_len_dis = {}
 
-
+        fed_len_dis = {}
 
         for author, value in dataBase.items():
+
+            print(dataBase)
 
             tokens = nltk.word_tokenize(dataBase[author])
 
@@ -42,6 +44,7 @@ class MendenhallTest:
 
             fed_len_dis[author] = nltk.FreqDist(token_len)
             fed_len_dis[author].plot(15, title=author)
+
 
 
 
