@@ -69,16 +69,14 @@ if __name__ == '__main__':
 
 
 
-    author_PaperContent = {}
     dataPath = "C:/Schoolprojects/history papers/history396project/history396GraphicalProject/Data/data"
 
 
-
-    author_PaperContent = fileConstruction.buildData(author_PaperContent, authorCon.returnCopy(), dataPath)
+    fileConstruction.buildData(authorCon.returnCopy(), dataPath)
 
 
     print("running mendenhalTest!:")
-    menTest.runMendenhalTest(author_PaperContent)
+    menTest.runMendenhalTest(fileConstruction.dataBase)
 
 
 

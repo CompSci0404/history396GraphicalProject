@@ -2,6 +2,8 @@
 from model import authorConstruction
 from model import FileCon
 from model import MendenhallTest
+from model import KilgariffTest
+
 
 class controller:
 
@@ -31,4 +33,11 @@ class controller:
         runMen = MendenhallTest.MendenhallTest()
 
         runMen.runMendenhalTest(self.fileConRef.dataBase)
+
+
+
+    def runKilgariffTest(self, authors):
+
+        runKil = KilgariffTest.KilgariffTest()
+        runKil.runKilgariffTest(self.fileConRef.dataBase, authors)
 
