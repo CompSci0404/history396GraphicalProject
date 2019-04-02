@@ -1,5 +1,15 @@
-# Matt Radke
-# mmr174
+
+
+"""
+Matt Radke: Historical 396 Digital History Textual anaylsis project
+
+This system I developed was inspired and built upon off the following programming Historian lesson:
+
+https://programminghistorian.org/en/lessons/introduction-to-stylometry-with-python
+
+The model tests used for Mendhall testing, Kilgariff and Zscores tests have been taken and adapted to fit this GUI system.
+"""
+
 #---[[Controller package I built, used to interact with only the data in the model. The view intakes data tells model it has data, controller deals with data and updates Model.]]---#
 from controller import controller
 
@@ -156,8 +166,12 @@ class buildAuthor(tk.Toplevel):
         else:
             self.errorLabel.config(text = "")                       # else, time to get to work.
 
+
+            self.notice = Label(self, text= "*Notice* if you want to run the kilgariff test there needs to be a 'Disputed' author entered into the following entry sections. This allows the program to determine author ship of a work. ")
+            self.notice.grid(row = 5, column = 1)
+
             counter = 0
-            lastRow = 4                                             # I just want to position the new entrys, and text under neath the last row, I will just keep adding rows.
+            lastRow = 5                                             # I just want to position the new entrys, and text under neath the last row, I will just keep adding rows.
             numberAuthors = int(self.numAuthor.get())               # get the number of authors from the input text field.
 
 
@@ -268,25 +282,137 @@ class buildAuthor(tk.Toplevel):
             newFrame = testingPage(con)
 
 
+"""
+Testing page(): 
+
+this class is the page that allows the user to conduct all there testing it offers three tests
+
+1. the first test is the Mendenhall test quite simple, just press the button and it displays all the authors and number words they have written on a graph.
+2. The second test is the Kilgariff test, which can read Disputed files and calculate a CHI-square  stat to determine the likeliness of a author being the author of the Disputed test.
+3. the Third and final test is a Delta method allows to compare anonymous texts to many different authors.
+
+"""
 
 class testingPage(tk.Toplevel):
 
     con = None                  # a reference to the controller class.
+    authorSelectedForKilg = []
+    lastRow = 0
 
     def __init__(self, controller):
-
         tk.Toplevel.__init__(self)
 
+        # the Mendhall test, layed out here, just a button to press very nice!
         self.con = controller
-
-        print("hello? ", self.con)
-
 
         self.label = Label(self, text = "click a button below to choose a Stylometric test to run on this data:", font=FONT)
         self.label.grid(row = 1, column = 1)
 
-        self.MendhallTest = Button(self, text = "Conduct Mendhall test:", font = FONT, command = lambda : self.con.runMendenhall())
+        self.MendhallTest = Button(self, text = "Conduct Mendhall test:", font = FONT,  command = lambda : self.con.runMendenhall())
         self.MendhallTest.grid(row = 2, column = 1)
+
+
+        self.sep = Label (self, text = "------------------------------------------------------------------", font = FONT)
+        self.sep.grid(row = 3, column = 1)
+
+        self.EnterAuthors = Label(self, text = "", font = FONT)
+        self.EnterAuthors.grid(row = 6, column = 1)
+
+
+                                                                                                                        # next up Kilgariff test, pretty straight forward, if the user did not enter disuputed as a author, then this section will not show up. Else if they did then they will get the following section built.
+
+        self.notice = Label(self, text = "You do not have a 'Disputed' field! Cannot run a Kilgariff test!")
+        self.notice.grid(row = 4, column = 1)
+
+        self.kilgTest = Button(self, text = "Conduct Kilgariff test:", font = FONT, state=DISABLED, command = lambda : self.runTest(self.authorSelectedForKilg))
+        self.kilgTest.grid(row=6, column = 2)
+
+
+        if(self.con.kilPossible()):
+            self.kilgTest.grid_configure(row = 5, column = 3)
+
+            self.notice.config(text = "")
+
+            self.EnterAuthors.config(text = "how many authors do you want to compare in a kilgariff test? Check which ones:")
+
+            self.lastRow = 7
+
+                                                                                                                        # this is a little check box area, the user checks which authors they want to have tested for the disputed files.
+            allCurrentAuthors = self.con.returnAllAuthors()
+
+
+            checkButtonDic = {}
+
+            checkVariable = {}
+
+            for x in  allCurrentAuthors:
+
+                if(x != "Disputed"):
+                    checkVariable[x] = IntVar()
+                    checkButtonDic[x] = Checkbutton(self, text = str(x), variable = checkVariable[x]).grid(row = self.lastRow + 1, sticky = W)
+
+                    self.lastRow += 1
+
+
+            self.submit = Button(self,  text = "submit", command = lambda : self.selectedContent(checkVariable))        # submit once everything is checked.
+            self.submit.grid(row = self.lastRow + 1, sticky = W)
+
+            self.lastRow += 1
+
+
+        self.sep2 = Label(self, text="------------------------------------------------------------------", font = FONT)
+        self.sep2.grid(self.lastRow + 1, column = 1)
+
+        self.lastRow += 1
+        
+
+
+    """
+    selectedContent(checkVariable):
+    
+        param:
+                checkVariable: this is a dictionary returned view, once the user clicks on one of the tick boxs above this dictionary containing the variables for that is stored here.
+        
+        this method counts through all the check box variables to see if it has been checked, if it has then we start the kilgariff test.
+    """
+    def selectedContent(self, checkVariable):
+
+        self.authorSelectedForKilg.clear()
+
+
+
+        for x in checkVariable.keys():
+
+            num = checkVariable[x].get()
+
+            if(num == 1):
+                self.kilgTest.config(state=NORMAL)                                                                      # we can now conduct a test!
+                self.authorSelectedForKilg.append(x)
+
+
+
+
+    """
+    RunText(author):
+    
+        param: author, a string of all the authors that were selected for testing.
+        
+        once the user has pressed Kilgariff test button above this method is called. Waits for the model to calculate the answers, return 
+        it. It will be updated here and displayed on the view. 
+        
+    """
+    def runTest(self, author):
+
+        answers = self.con.runKilgariffTest(self.authorSelectedForKilg)
+        self.answerL = Label(self, text = "Answers: ")
+        self.answerL.grid( row = self.lastRow + 1, column = 1)
+        ans = ""
+
+        for keys, value in answers.items():
+
+            ans += "Author: " + keys + " chisquare result is: " + str(value) + " "
+
+            self.answerL.config(text = ans, font = FONT)
 
 
 
@@ -297,4 +423,5 @@ if __name__ == '__main__':
     my_gui = startPage(root)
 
     root.mainloop()
+
 

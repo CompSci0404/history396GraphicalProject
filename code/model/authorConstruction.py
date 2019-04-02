@@ -71,6 +71,13 @@ class authorConstruction:
         return deepCopy
 
 
+    def returnAuthors(self):
+        strList = list(self.papersByAuthor.keys())
+
+        print(strList)
+        return strList
+
+
 if __name__ == '__main__':
     # for testing of this class!
 
@@ -107,3 +114,6 @@ if __name__ == '__main__':
 
     # read data for tostring, should print out all content.
     print(buildAuthor.toString())
+
+
+    buildAuthor.returnAuthors()

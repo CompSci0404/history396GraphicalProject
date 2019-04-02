@@ -39,6 +39,8 @@ class KilgariffTest:
     def runKilgariffTest(self,database, authors):
 
 
+            chiSqu = {}
+
             database_Token = self.buildToken(database)  # build tokens before using
 
 
@@ -77,8 +79,11 @@ class KilgariffTest:
                                    (disputed_count - expected_disputed_count)
                                    / expected_disputed_count)
 
+                chiSqu[author] = chisquared
 
                 print("The Chi-squared statistic for candidate", author, "is", chisquared)
+
+            return chiSqu
 
 
 
@@ -91,7 +96,7 @@ if __name__ == '__main__':
 
     test = KilgariffTest()
 
-    authors = ("Jay", "Madison")
+    authors = ("Jay", "Madison", "Hamilton")
 
     testDic = {"Madison": [10, 14, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48],
                "Hamilton": [1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24,

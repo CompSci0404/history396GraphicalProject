@@ -39,5 +39,27 @@ class controller:
     def runKilgariffTest(self, authors):
 
         runKil = KilgariffTest.KilgariffTest()
-        runKil.runKilgariffTest(self.fileConRef.dataBase, authors)
 
+        answer = runKil.runKilgariffTest(self.fileConRef.dataBase, authors)
+
+        print(answer)
+
+        
+        return answer
+
+
+    def kilPossible(self):
+
+        keyExist = False
+
+        if "Disputed" in self.fileConRef.dataBase:
+
+            keyExist = True
+
+
+        return keyExist
+
+
+    def returnAllAuthors(self):
+
+        return self.authorDataRef.returnAuthors()
