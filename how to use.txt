@@ -1,0 +1,24 @@
+Hey, welcome to the my Graphical tool!
+
+A few important things to keep in mind before using.
+
+1. I could not build this project into a EXE, turns out Python does not have a equivalent to a exe/JAR file. It is rather complex to get it work on a Windows computer. So you will need to import the project to ensure it works.
+2. When importing, clone the Git hub, I will give you Maintainer access to it. Once you grab the content open up your editor and say you want to import/open the code folder.
+3. Data is stored in the Data/data folder. So access that folder when searching for a directory.
+4. You might need to intsall nltk, and Matplotlib on your side.
+	Here pip commands to install nltk and matplotlib: 
+	
+	pip install nltk
+	pip install matplotlib
+
+Running the project: 
+
+1. Once those pips are installed project is ready to be used. Click play on the System.py file, this file will run the entire project.
+2. The only thing I will ask to ensure it works and you are not wondering why it does not work is to input data a certain way. 
+	When inputting data on the second page, if you want to test out the Kilgraff test, include a Disputed author. There instruction about that on that page.
+	When inputting which files belong to a certain author just enter the file number and a space following a second file number etc.
+	
+	ex: 1 2 3 4 5 6 7 22 33 44 55 100...... etc 
+
+	
+-Thanks, hopefully it is not to difficult to set-up!

@@ -1,9 +1,7 @@
 # this is first test that can be ran on the system, Mendenhalls curves test.
 
 import nltk
-#nltk.download('punkt')
-
-import matplotlib.pyplot as plt
+#nltk.download('punkt'
 
 from model import FileCon
 from model import authorConstruction
@@ -22,6 +20,9 @@ class MendenhallTest:
 
 
     def runMendenhalTest(self, dataBase):
+
+
+
 
         fed_By_Token =  {}
 
@@ -44,13 +45,6 @@ class MendenhallTest:
 
             fed_len_dis[author] = nltk.FreqDist(token_len)
             fed_len_dis[author].plot(15, title=author)
-
-
-
-
-    # going to need to use plt to run this stuff!
-
-
 
 
 

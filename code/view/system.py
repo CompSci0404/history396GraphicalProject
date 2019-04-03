@@ -186,45 +186,53 @@ class buildAuthor(tk.Toplevel):
 
             counter = 0
             lastRow = 5                                             # I just want to position the new entrys, and text under neath the last row, I will just keep adding rows.
-            numberAuthors = int(self.numAuthor.get())               # get the number of authors from the input text field.
+
+            try:
+
+                numberAuthors = int(self.numAuthor.get())               # get the number of authors from the input text field.
+                self.errorLabel.config(text="")  # else, time to get to work.
 
 
                                                                     # all the new GUI parts that we are going to add, we will store them within these dictionaries.
-            dictionaryOfAuthorLabels = {}
-            dictionaryOfAuthorEntrys = {}
+                dictionaryOfAuthorLabels = {}
+                dictionaryOfAuthorEntrys = {}
 
-            dictionaryOfWorksLabels = {}
-            dictionaryOfWorksEntrys = {}
+                dictionaryOfWorksLabels = {}
+                dictionaryOfWorksEntrys = {}
 
-            while(counter <  numberAuthors):                                                                            # count throw how many authors we want, that is how many pieces we put into the FRAME.
+                while(counter <  numberAuthors):                                                                            # count throw how many authors we want, that is how many pieces we put into the FRAME.
 
                                                                                                                         # Basically I created a variable called authIn0......N, then I said for this variable store in a GUI Object.
 
                                                                                                                         # store labels, for the authors NAME, basically this is just a instruction, so user knows what to put.
-                dictionaryOfAuthorLabels["authIn"+str(counter)] = Label(self, text="Input Authors Name:", font= FONT)
-                dictionaryOfAuthorLabels["authIn"+str(counter)].grid(row = lastRow + 1, column = 1)                     # neat little Idea I had, just keep adding onto the row to add each label.
+                    dictionaryOfAuthorLabels["authIn"+str(counter)] = Label(self, text="Input Authors Name:", font= FONT)
+                    dictionaryOfAuthorLabels["authIn"+str(counter)].grid(row = lastRow + 1, column = 1)                     # neat little Idea I had, just keep adding onto the row to add each label.
 
-                # A dictionary entry, stores the entry field for the corriersponding label above
-                dictionaryOfAuthorEntrys["authIn"+str(counter)] = Entry(self)
-                dictionaryOfAuthorEntrys["authIn"+str(counter)].grid(row = lastRow + 1, column = 2)                     # the rest of these dictionaries do the same thing, they build a number of different GUI pieces and keep track of them.
+                    # A dictionary entry, stores the entry field for the corriersponding label above
+                    dictionaryOfAuthorEntrys["authIn"+str(counter)] = Entry(self)
+                    dictionaryOfAuthorEntrys["authIn"+str(counter)].grid(row = lastRow + 1, column = 2)                     # the rest of these dictionaries do the same thing, they build a number of different GUI pieces and keep track of them.
 
-                dictionaryOfWorksLabels["authIn" + str(counter)] = Label(self,text="Input file numbers that belong to this author",font=FONT)
-                dictionaryOfWorksLabels["authIn" + str(counter)].grid(row=lastRow + 1, column=3)
+                    dictionaryOfWorksLabels["authIn" + str(counter)] = Label(self,text="Input file numbers that belong to this author",font=FONT)
+                    dictionaryOfWorksLabels["authIn" + str(counter)].grid(row=lastRow + 1, column=3)
 
-                dictionaryOfWorksEntrys["authIn" + str(counter)] = Entry(self)
-                dictionaryOfWorksEntrys["authIn" + str(counter)].grid(row = lastRow + 1, column = 4)
+                    dictionaryOfWorksEntrys["authIn" + str(counter)] = Entry(self)
+                    dictionaryOfWorksEntrys["authIn" + str(counter)].grid(row = lastRow + 1, column = 4)
 
 
-                lastRow += 1
-                counter += 1
+                    lastRow += 1
+                    counter += 1
 
-            # create a new button, this button will progress to the next page.
-            self.doneButton = Button(self, text="submit data:", font=FONT, command = lambda : self.FrameDone( dictionaryOfAuthorEntrys, dictionaryOfWorksEntrys))
-            self.doneButton.grid(row=lastRow + 1, column = 5)
+                # create a new button, this button will progress to the next page.
+                self.doneButton = Button(self, text="submit data:", font=FONT, command = lambda : self.FrameDone( dictionaryOfAuthorEntrys, dictionaryOfWorksEntrys))
+                self.doneButton.grid(row=lastRow + 1, column = 5)
 
-            # move the back button down to bottom of this GUI page.
-            self.backButton.grid_configure(row = lastRow +1 , column = 1)
-            self.submitButton.destroy() # destory the submit button because data has been recorded.
+                # move the back button down to bottom of this GUI page.
+                self.backButton.grid_configure(row = lastRow +1 , column = 1)
+
+
+            except:
+
+                self.errorLabel.config(text="Notice: you entered a word not a number!")
 
     """
     FrameDone(dict1, dict2):
@@ -248,7 +256,7 @@ class buildAuthor(tk.Toplevel):
 
         while(counter < len(dictionaryOfEntrys)):   # first lets do a check to see if all entries have been filled, if one of them is equal to 0 then we have nothing in this entry.
 
-            if(dictionaryOfEntrys["authIn"+ str(counter)].get() == 0 or dicOfWorkEnt["authIn" + str(counter)].get() == 0):
+            if(len(dictionaryOfEntrys["authIn"+ str(counter)].get()) == 0 or len(dicOfWorkEnt["authIn" + str(counter)].get()) == 0):
 
                 self.errorLabel.config(text = "please fill in all entry items in the Panel!")
                 dataFilled = False
@@ -266,7 +274,9 @@ class buildAuthor(tk.Toplevel):
 
                 numbers = str(dicOfWorkEnt[key].get())      # get all the numbers per each entry.
 
+
                 listOfStrNum = re.findall('\d+', numbers)   # store them in a list.
+
 
                 k = 0
 
@@ -283,6 +293,7 @@ class buildAuthor(tk.Toplevel):
 
                 listOfStrNum.clear()
                 listOfNumbers.clear()
+
 
 
             print("After doing all calculations this is what we got:\n",dictionaryForModel)
@@ -529,7 +540,6 @@ if __name__ == '__main__':
     root = tk.Tk()
 
     my_gui = startPage(root)
-
 
     root.mainloop()
 
