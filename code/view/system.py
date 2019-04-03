@@ -17,6 +17,8 @@ from controller import controller
 from tkinter import filedialog
 from tkinter import *
 import tkinter as tk
+from tkinter import messagebox
+
 
 #---[[String manipulation import:]]---#
 import re
@@ -50,7 +52,7 @@ class startPage(tk.Frame):
         # ---[[creating the main panel ]] --- #
 
         self.mainMenu = args[0]
-
+        self.mainMenu.protocol( "WM_DELETE_WINDOW", lambda :self.closing(self.mainMenu))
         self.mainMenu.title("Digital History 396 Graphical Textual Analysis Tool")
 
     #---[[label, instructions gives the user a instruction to follow]]---#
@@ -74,6 +76,11 @@ class startPage(tk.Frame):
         self.Quit_Button.grid(row = 4, column = 4)
 
 
+    def closing(self, mainMenu):
+
+        if(messagebox.askokcancel("Quit", "do you want to quit?")):
+
+            mainMenu.destroy()
 
     """
     buildDirWin(MainMenu): 
@@ -119,6 +126,7 @@ class buildAuthor(tk.Toplevel):
         self.root = root        # store the root, and the data path from last window.
         self.dataPath = dataPath
 
+        self.protocol("WM_DELETE_WINDOW", lambda: self.closing())
 
 
         #self.geometry("100x100")
@@ -137,6 +145,12 @@ class buildAuthor(tk.Toplevel):
         self.errorLabel = Label(self, text="", font=FONT )
         self.errorLabel.grid(row = 4, column = 2)
 
+
+    def closing(self):
+
+        if (messagebox.askokcancel("Quit", "do you want to quit?")):
+            self.root.destroy()
+            #self.destroy()
 
     """
     backToStart():
@@ -279,7 +293,7 @@ class buildAuthor(tk.Toplevel):
             con.authorBuild(dictionaryForModel, self.dataPath)
 
             self.withdraw()                                 # move to the next window page.
-            newFrame = testingPage(con)
+            newFrame = testingPage(con, self.root)
 
 
 """
@@ -296,14 +310,19 @@ this class is the page that allows the user to conduct all there testing it offe
 class testingPage(tk.Toplevel):
 
     con = None                  # a reference to the controller class.
+    root = None
     authorSelectedForKilg = []
     lastRow = 0
 
-    def __init__(self, controller):
+    def __init__(self, controller, root):
         tk.Toplevel.__init__(self)
 
         # the Mendhall test, layed out here, just a button to press very nice!
         self.con = controller
+        self.root = root
+
+        self.protocol("WM_DELETE_WINDOW", lambda: self.closing())
+
 
         self.label = Label(self, text = "click a button below to choose a Stylometric test to run on this data:", font=FONT)
         self.label.grid(row = 1, column = 1)
@@ -364,7 +383,7 @@ class testingPage(tk.Toplevel):
 
         self.lastRow += 1
 
-        self.DeltaInst = Label(self, text = "Enter in the number of results that you would like to see for Word Frequency:", font= FONT)
+        self.DeltaInst = Label(self, text = "Enter in the number of results that you would like to see for Word Frequency: *important, words will be removed if they are considerd a Stop word*", font= FONT)
         self.DeltaInst.grid(row = self.lastRow + 1, column = 1)
 
         self.ent = Entry(self)
@@ -380,6 +399,15 @@ class testingPage(tk.Toplevel):
         self.no = Label(self, text="", font=FONT)
         self.no.grid(row=self.lastRow + 1, column=2)
         self.lastRow += 1
+
+
+
+    def closing(self):
+
+        if (messagebox.askokcancel("Quit", "do you want to quit?")):
+            self.root.destroy()
+            #self.destroy()
+
 
 
     def gainInfo(self):
@@ -501,6 +529,7 @@ if __name__ == '__main__':
     root = tk.Tk()
 
     my_gui = startPage(root)
+
 
     root.mainloop()
 

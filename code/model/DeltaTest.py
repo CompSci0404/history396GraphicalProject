@@ -2,7 +2,7 @@
 import nltk
 from model import FileCon
 import re
-nltk.download('stopwords')
+#nltk.download('stopwords')
 
 
 class DeltaTest:

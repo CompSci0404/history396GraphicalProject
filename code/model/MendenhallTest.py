@@ -1,7 +1,7 @@
 # this is first test that can be ran on the system, Mendenhalls curves test.
 
 import nltk
-nltk.download('punkt')
+#nltk.download('punkt')
 
 import matplotlib.pyplot as plt
 
